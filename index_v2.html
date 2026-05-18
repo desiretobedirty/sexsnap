@@ -12,8 +12,6 @@
 
 <style>
   :root {
-    --bg: #050510;
-
     --pink: #ff2d95;
 
     --purple: #a855ff;
@@ -22,17 +20,11 @@
       0 0 18px rgba(255, 0, 180, 0.7),
       0 0 32px rgba(168, 85, 255, 0.5);
 
-    /* Fluid spacing */
-    --space-xs: clamp(8px, 1vw, 14px);
-    --space-sm: clamp(12px, 1.4vw, 20px);
+    --space-sm: clamp(12px, 1vw, 20px);
     --space-md: clamp(18px, 2vw, 32px);
     --space-lg: clamp(24px, 3vw, 48px);
 
-    /* Fluid radius */
-    --radius: clamp(12px, 1vw, 22px);
-
-    /* UHD-safe max width */
-    --content-width: min(96vw, 3200px);
+    --radius: clamp(10px, 1vw, 20px);
   }
 
   * {
@@ -79,8 +71,6 @@
   .app {
     width: 100%;
 
-    max-width: var(--content-width);
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -101,28 +91,29 @@
   }
 
   .grid {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: clamp(12px, 2vw, 40px);
+
     width: 100%;
 
-    display: grid;
-
-    /* ALWAYS side-by-side */
-    grid-template-columns: 1fr 1fr;
-
-    gap: clamp(16px, 2vw, 40px);
-
-    align-items: center;
+    flex-wrap: nowrap;
   }
 
   .grid img {
-    width: 100%;
-
-    aspect-ratio: 16 / 9;
+    /* TRUE 100% image size */
+    width: auto;
 
     height: auto;
 
-    max-height: 42vh;
+    max-width: 48vw;
 
-    object-fit: cover;
+    max-height: 82vh;
+
+    object-fit: contain;
 
     border-radius: var(--radius);
 
@@ -221,18 +212,6 @@
     padding-inline: var(--space-sm);
   }
 
-  /* Ultra-wide / UHD displays */
-  @media (min-width: 3000px) {
-
-    .grid {
-      gap: 56px;
-    }
-
-    .grid img {
-      border-width: 3px;
-    }
-  }
-
   /* Phones */
   @media (max-width: 700px) {
 
@@ -241,11 +220,12 @@
     }
 
     .grid {
-      gap: 12px;
+      gap: 8px;
     }
 
     .grid img {
-      max-height: 32vh;
+      max-width: 49vw;
+      max-height: 60vh;
     }
 
     button {
@@ -335,7 +315,7 @@
 
   const START_IMAGE = "images/ss.webp";
 
-  // 1 in 12 chance of a match
+  // 1 in 12 chance of match
   const MATCH_ODDS = 12;
 
   const leftImage =
@@ -352,7 +332,7 @@
     right: -1
   };
 
-  // Show start image
+  // Initial image
   leftImage.src = START_IMAGE;
   rightImage.src = START_IMAGE;
 
