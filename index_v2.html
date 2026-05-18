@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta
+ name="viewport"
+ content="width=device-width, initial-scale=1.0"
+/>
+
+<title>Sex Snap</title>
+
+<style>
+ :root {
+   --bg: #050510;
+   --pink: #ff2d95;
+   --purple: #a855ff;
+
+   --glow:
+     0 0 18px rgba(255, 0, 180, 0.7),
+     0 0 32px rgba(168, 85, 255, 0.5);
+
+   /* Fluid spacing */
+   --space-xs: clamp(8px, 1vw, 14px);
+   --space-sm: clamp(12px, 1.4vw, 20px);
+   --space-md: clamp(18px, 2vw, 32px);
+   --space-lg: clamp(24px, 3vw, 48px);
+
+   /* Fluid radius */
+   --radius: clamp(12px, 1vw, 22px);
+
+   /* UHD-safe content width */
+   --content-width: min(96vw, 3200px);
+ }
+
+ * {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+ }
+
+ html {
+   font-size: clamp(14px, 0.9vw, 24px);
+ }
+
+ body {
+   min-height: 100vh;
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   padding: var(--space-lg);
+
+   overflow-x: hidden;
+
+   background:
+     radial-gradient(
+       circle at top,
+       #1a0033 0%,
+       #050510 55%,
+       #000 100%
+     );
+
+   font-family:
+     Arial,
+     Helvetica,
+     sans-serif;
+
+   color: white;
+
+   -webkit-font-smoothing: antialiased;
+   text-rendering: optimizeLegibility;
+ }
+
+ .app {
+   width: 100%;
+   max-width: var(--content-width);
+
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+ }
+
+ h1 {
+   font-size: clamp(2rem, 5vw, 5rem);
+
+   letter-spacing: 0.08em;
+
+   margin-bottom: var(--space-lg);
+
+   color: var(--pink);
+
+   text-shadow: var(--glow);
+
+   text-align: center;
+ }
+
+ .grid {
+   width: 100%;
+
+   display: grid;
+
+   grid-template-columns:
+     repeat(
+       auto-fit,
+       minmax(min(100%, 900px), 1fr)
+     );
+
+   gap: clamp(16px, 2vw, 40px);
+
+   align-items: center;
+   justify-content: center;
+ }
+
+ .grid img {
+   width: 100%;
+
+   aspect-ratio: 16 / 9;
+
+   height: auto;
+
+   object-fit: cover;
+
+   border-radius: var(--radius);
+
+   border: 2px solid rgba(255,255,255,0.12);
+
+   box-shadow:
+     0 0 20px rgba(168, 85, 255, 0.35);
+
+   transition:
+     opacity 0.12s ease,
+     transform 0.12s ease;
+
+   display: block;
+
+   image-rendering: auto;
+
+   backface-visibility: hidden;
+
+   transform: translateZ(0);
+ }
+
+ .grid img:hover {
+   transform:
+     scale(1.01)
+     translateZ(0);
+ }
+
+ .flash {
+   opacity: 0.25;
+ }
+
+ button {
+   margin-top: var(--space-lg);
+
+   padding:
+     clamp(14px, 1.2vw, 24px)
+     clamp(26px, 3vw, 56px);
+
+   border: none;
+   border-radius: 999px;
+
+   cursor: pointer;
+
+   font-size: clamp(1rem, 1.2vw, 1.5rem);
+
+   font-weight: bold;
+
+   letter-spacing: 0.08em;
+
+   text-transform: uppercase;
+
+   color: white;
+
+   background:
+     linear-gradient(
+       135deg,
+       var(--pink),
+       var(--purple)
+     );
+
+   box-shadow: var(--glow);
+
+   transition:
+     transform 0.15s ease,
+     opacity 0.15s ease;
+
+   min-height: 48px;
+ }
+
+ button:hover {
+   opacity: 0.95;
+ }
+
+ button:active {
+   transform: scale(0.96);
+ }
+
+ .footer {
+   margin-top: var(--space-md);
+
+   max-width: 1200px;
+
+   text-align: center;
+
+   opacity: 0.75;
+
+   line-height: 1.6;
+
+   font-size: clamp(
+     0.9rem,
+     1vw,
+     1.25rem
+   );
+
+   padding-inline: var(--space-sm);
+ }
+
+ /* Ultra-wide / UHD displays */
+ @media (min-width: 3000px) {
+
+   .grid {
+     gap: 56px;
+   }
+
+   .grid img {
+     border-width: 3px;
+   }
+ }
+
+ /* Portrait phones */
+ @media (max-width: 700px) {
+
+   body {
+     align-items: flex-start;
+   }
+
+   .grid {
+     grid-template-columns: 1fr;
+   }
+
+   button {
+     width: 100%;
+     max-width: 500px;
+   }
+ }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+ <h1>SEX SNAP</h1>
+
+ <div class="grid">
+   <img id="leftImage" alt="Left Image">
+   <img id="rightImage" alt="Right Image">
+ </div>
+
+ <button id="refreshBtn">
+   Refresh
+ </button>
+
+ <p class="footer">
+   If both cards match, first person to shout
+   “SEX” decides the next move:
+   "Sex or Refresh".
+ </p>
+
+</div>
+
+<script>
+ const IMAGES = [
+   "images/bodyguard_01.webp",
+   "images/bodyguard_02.webp",
+   "images/bull_01.webp",
+   "images/bull_02.webp",
+   "images/butterfly_01.webp",
+   "images/butterfly_02.webp",
+   "images/butterfly_03.webp",
+   "images/butterfly_04.webp",
+   "images/cowgirl_01.webp",
+   "images/cowgirl_02.webp",
+   "images/cowgirl_03.webp",
+   "images/cowgirl_04.webp",
+   "images/cowgirl_05.webp",
+   "images/crab_01.webp",
+   "images/cradle_01.webp",
+   "images/cradle_02.webp",
+   "images/cradle_03.webp",
+   "images/dancer_01.webp",
+   "images/dancer_02.webp",
+   "images/doggy_01.webp",
+   "images/doggy_02.webp",
+   "images/doggy_03.webp",
+   "images/doggy_04.webp",
+   "images/doggy_05.webp",
+   "images/doggy_06.webp",
+   "images/doggy_07.webp",
+   "images/groundhog_01.webp",
+   "images/groundhog_02.webp",
+   "images/groundhog_03.webp",
+   "images/guard_01.webp",
+   "images/guard_02.webp",
+   "images/guard_03.webp",
+   "images/lapdance_01.webp",
+   "images/lapdance_02.webp",
+   "images/lapdance_03.webp",
+   "images/lotus_01.webp",
+   "images/missionary_01.webp",
+   "images/missionary_02.webp",
+   "images/missionary_03.webp",
+   "images/missionary_04.webp",
+   "images/missionary_05.webp",
+   "images/missionary_06.webp",
+   "images/missionary_07.webp",
+   "images/rodeo_01.webp",
+   "images/rodeo_02.webp",
+   "images/saint_01.webp",
+   "images/scissors_01.webp",
+   "images/scissors_02.webp",
+   "images/sinner_01.webp",
+   "images/spoons_01.webp",
+   "images/spoons_02.webp",
+   "images/spoons_03.webp"
+ ];
+
+ const START_IMAGE = "images/ss.webp";
+
+ // 1 in 12 chance of a match
+ const MATCH_ODDS = 12;
+
+ const leftImage =
+   document.getElementById("leftImage");
+
+ const rightImage =
+   document.getElementById("rightImage");
+
+ const refreshBtn =
+   document.getElementById("refreshBtn");
+
+ let previous = {
+   left: -1,
+   right: -1
+ };
+
+ // Show initial image
+ leftImage.src = START_IMAGE;
+ rightImage.src = START_IMAGE;
+
+ // Preload all images
+ [START_IMAGE, ...IMAGES].forEach(src => {
+   const img = new Image();
+   img.src = src;
+ });
+
+ function randomIndex() {
+   return Math.floor(
+     Math.random() * IMAGES.length
+   );
+ }
+
+ function getNewIndex(excluded) {
+   let i;
+
+   do {
+     i = randomIndex();
+   } while (i === excluded);
+
+   return i;
+ }
+
+ function flash() {
+   leftImage.classList.add("flash");
+   rightImage.classList.add("flash");
+
+   setTimeout(() => {
+     leftImage.classList.remove("flash");
+     rightImage.classList.remove("flash");
+   }, 120);
+ }
+
+ function refreshImages() {
+
+   const leftIndex =
+     getNewIndex(previous.left);
+
+   const shouldMatch =
+     Math.floor(
+       Math.random() * MATCH_ODDS
+     ) === 0;
+
+   let rightIndex;
+
+   if (shouldMatch) {
+
+     rightIndex = leftIndex;
+
+   } else {
+
+     const pool = IMAGES
+       .map((_, i) => i)
+       .filter(i =>
+         i !== leftIndex &&
+         i !== previous.right
+       );
+
+     rightIndex =
+       pool[
+         Math.floor(
+           Math.random() * pool.length
+         )
+       ];
+   }
+
+   previous = {
+     left: leftIndex,
+     right: rightIndex
+   };
+
+   leftImage.src = IMAGES[leftIndex];
+   rightImage.src = IMAGES[rightIndex];
+
+   flash();
+ }
+
+ refreshBtn.addEventListener(
+   "click",
+   refreshImages
+ );
+
+ // Optional:
+ // SPACEBAR refresh support
+ document.addEventListener("keydown", e => {
+   if (e.code === "Space") {
+     e.preventDefault();
+     refreshImages();
+   }
+ });
+</script>
+
+</body>
+</html>
