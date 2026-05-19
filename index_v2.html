@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sex Snap</title>
+
+<style>
+  :root {
+    --pink: #ff2d95;
+    --purple: #a855ff;
+    --glow: 0 0 18px rgba(255, 0, 180, 0.7), 0 0 32px rgba(168, 85, 255, 0.5);
+    --radius: 16px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4vw;
+    background: radial-gradient(circle at top, #1a0033 0%, #050510 55%, #000 100%);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    text-align: center;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 1600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 5rem);
+    color: var(--pink);
+    text-shadow: var(--glow);
+    letter-spacing: 0.08em;
+  }
+
+  .grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(10px, 2vw, 40px);
+    align-items: center;
+  }
+
+  .grid img {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: var(--radius);
+    border: 2px solid rgba(255,255,255,0.12);
+    box-shadow: 0 0 20px rgba(168, 85, 255, 0.35);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .grid img:hover {
+    transform: scale(1.02);
+  }
+
+  .flash {
+    opacity: 0.25;
+  }
+
+  button {
+    padding: 1rem 3rem;
+    font-size: clamp(1rem, 1.5vw, 1.6rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: white;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: var(--glow);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  button:hover {
+    opacity: 0.95;
+  }
+
+  button:active {
+    transform: scale(0.96);
+  }
+
+  .footer {
+    max-width: 900px;
+    opacity: 0.75;
+    line-height: 1.6;
+    font-size: clamp(0.9rem, 1.2vw, 1.25rem);
+  }
+
+  @media (max-width: 700px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid img {
+      max-height: 55vh;
+    }
+
+    button {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="grid">
+    <img id="leftImage" alt="Left Image">
+    <img id="rightImage" alt="Right Image">
+  </div>
+
+  <button id="refreshBtn">Refresh</button>
+
+  <p class="footer">
+    If both cards match, first person to shout “SEX” decides the next move: "Sex or Refresh".
+  </p>
+
+</div>
+
+<script>
+  const IMAGES = [
+    "images/69_01.webp","images/69_02.webp","images/69_03.webp","images/69_04.webp","images/69_05.webp",
+    "images/amazon_01.webp","images/amazon_02.webp","images/amazon_03.webp",
+    "images/bodyguard_01.webp","images/bodyguard_02.webp",
+    "images/bull_01.webp","images/bull_02.webp",
+    "images/butterfly_01.webp","images/butterfly_02.webp","images/butterfly_03.webp","images/butterfly_04.webp","images/butterfly_05.webp",
+    "images/car_01.webp","images/car_02.webp","images/car_03.webp","images/car_04.webp",
+    "images/cowgirl_01.webp","images/cowgirl_02.webp","images/cowgirl_03.webp","images/cowgirl_04.webp","images/cowgirl_05.webp",
+    "images/crab_01.webp",
+    "images/cradle_01.webp","images/cradle_02.webp","images/cradle_03.webp",
+    "images/dancer_01.webp","images/dancer_02.webp",
+    "images/doggy_01.webp","images/doggy_02.webp","images/doggy_03.webp","images/doggy_04.webp","images/doggy_05.webp","images/doggy_06.webp","images/doggy_07.webp","images/doggy_08.webp",
+    "images/groundhog_01.webp","images/groundhog_02.webp","images/groundhog_03.webp",
+    "images/guard_01.webp","images/guard_02.webp","images/guard_03.webp",
+    "images/hanger_01.webp",
+    "images/lapdance_01.webp","images/lapdance_02.webp","images/lapdance_03.webp",
+    "images/lotus_01.webp",
+    "images/missionary_01.webp","images/missionary_02.webp","images/missionary_03.webp","images/missionary_04.webp","images/missionary_05.webp","images/missionary_06.webp","images/missionary_07.webp","images/missionary_08.webp",
+    "images/piledriver_01.webp",
+    "images/rodeo_01.webp","images/rodeo_02.webp",
+    "images/saint_01.webp","images/saint_02.webp",
+    "images/scissors_01.webp","images/scissors_02.webp",
+    "images/sinner_01.webp",
+    "images/spoons_01.webp","images/spoons_02.webp","images/spoons_03.webp"
+  ];
+
+  const START_IMAGE = "images/ss.webp";
+  const MATCH_ODDS = 12;
+
+  const leftImage = document.getElementById("leftImage");
+  const rightImage = document.getElementById("rightImage");
+  const refreshBtn = document.getElementById("refreshBtn");
+
+  let previous = { left: -1, right: -1 };
+
+  leftImage.src = START_IMAGE;
+  rightImage.src = START_IMAGE;
+
+  [...IMAGES, START_IMAGE].forEach(src => new Image().src = src);
+
+  function getNewIndex(excluded = []) {
+    let i;
+    do {
+      i = Math.floor(Math.random() * IMAGES.length);
+    } while (excluded.includes(i));
+    return i;
+  }
+
+  function flash() {
+    leftImage.classList.add("flash");
+    rightImage.classList.add("flash");
+    setTimeout(() => {
+      leftImage.classList.remove("flash");
+      rightImage.classList.remove("flash");
+    }, 120);
+  }
+
+  function refreshImages() {
+    const excluded = [previous.left, previous.right];
+
+    const leftIndex = getNewIndex(excluded);
+    const shouldMatch = Math.random() < 1 / MATCH_ODDS;
+
+    let rightIndex;
+
+    if (shouldMatch) {
+      rightIndex = leftIndex;
+    } else {
+      rightIndex = getNewIndex([...excluded, leftIndex]);
+    }
+
+    previous = { left: leftIndex, right: rightIndex };
+
+    leftImage.src = IMAGES[leftIndex];
+    rightImage.src = IMAGES[rightIndex];
+
+    flash();
+  }
+
+  refreshBtn.addEventListener("click", refreshImages);
+
+  document.addEventListener("keydown", e => {
+    if (e.code === "Space") {
+      e.preventDefault();
+      refreshImages();
+    }
+  });
+</script>
+
+</body>
+</html>
