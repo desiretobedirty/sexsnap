@@ -47,7 +47,6 @@
     letter-spacing: 0.08em;
   }
 
-  /* --- IMAGE GRID --- */
   .grid {
     width: 100%;
     display: grid;
@@ -75,7 +74,6 @@
     opacity: 0.25;
   }
 
-  /* --- BUTTON --- */
   button {
     padding: 1rem 3rem;
     font-size: clamp(1rem, 1.5vw, 1.6rem);
@@ -106,7 +104,6 @@
     font-size: clamp(0.9rem, 1.2vw, 1.25rem);
   }
 
-  /* --- MOBILE --- */
   @media (max-width: 700px) {
     .grid {
       grid-template-columns: 1fr 1fr;
@@ -144,76 +141,29 @@
 
 <script>
   const IMAGES = [
-    "images/69_01.webp",
-    "images/69_02.webp",
-    "images/69_03.webp",
-    "images/69_04.webp",
-    "images/69_05.webp",
-    "images/amazon_01.webp",
-    "images/amazon_02.webp",
-    "images/amazon_03.webp",
-    "images/bodyguard_01.webp",
-    "images/bodyguard_02.webp",
-    "images/bull_01.webp",
-    "images/bull_02.webp",
-    "images/butterfly_01.webp",
-    "images/butterfly_02.webp",
-    "images/butterfly_03.webp",
-    "images/butterfly_04.webp",
-    "images/butterfly_05.webp",
-    "images/car_01.webp",
-    "images/car_02.webp",
-    "images/car_03.webp",
-    "images/car_04.webp",
-    "images/cowgirl_01.webp",
-    "images/cowgirl_02.webp",
-    "images/cowgirl_03.webp",
-    "images/cowgirl_04.webp",
-    "images/cowgirl_05.webp",
+    "images/69_01.webp","images/69_02.webp","images/69_03.webp","images/69_04.webp","images/69_05.webp",
+    "images/amazon_01.webp","images/amazon_02.webp","images/amazon_03.webp",
+    "images/bodyguard_01.webp","images/bodyguard_02.webp",
+    "images/bull_01.webp","images/bull_02.webp",
+    "images/butterfly_01.webp","images/butterfly_02.webp","images/butterfly_03.webp","images/butterfly_04.webp","images/butterfly_05.webp",
+    "images/car_01.webp","images/car_02.webp","images/car_03.webp","images/car_04.webp",
+    "images/cowgirl_01.webp","images/cowgirl_02.webp","images/cowgirl_03.webp","images/cowgirl_04.webp","images/cowgirl_05.webp",
     "images/crab_01.webp",
-    "images/cradle_01.webp",
-    "images/cradle_02.webp",
-    "images/cradle_03.webp",
-    "images/dancer_01.webp",
-    "images/dancer_02.webp",
-    "images/doggy_01.webp",
-    "images/doggy_02.webp",
-    "images/doggy_03.webp",
-    "images/doggy_04.webp",
-    "images/doggy_05.webp",
-    "images/doggy_06.webp",
-    "images/doggy_07.webp",
-    "images/doggy_08.webp",
-    "images/groundhog_01.webp",
-    "images/groundhog_02.webp",
-    "images/groundhog_03.webp",
-    "images/guard_01.webp",
-    "images/guard_02.webp",
-    "images/guard_03.webp",
+    "images/cradle_01.webp","images/cradle_02.webp","images/cradle_03.webp",
+    "images/dancer_01.webp","images/dancer_02.webp",
+    "images/doggy_01.webp","images/doggy_02.webp","images/doggy_03.webp","images/doggy_04.webp","images/doggy_05.webp","images/doggy_06.webp","images/doggy_07.webp","images/doggy_08.webp",
+    "images/groundhog_01.webp","images/groundhog_02.webp","images/groundhog_03.webp",
+    "images/guard_01.webp","images/guard_02.webp","images/guard_03.webp",
     "images/hanger_01.webp",
-    "images/lapdance_01.webp",
-    "images/lapdance_02.webp",
-    "images/lapdance_03.webp",
+    "images/lapdance_01.webp","images/lapdance_02.webp","images/lapdance_03.webp",
     "images/lotus_01.webp",
-    "images/missionary_01.webp",
-    "images/missionary_02.webp",
-    "images/missionary_03.webp",
-    "images/missionary_04.webp",
-    "images/missionary_05.webp",
-    "images/missionary_06.webp",
-    "images/missionary_07.webp",
-    "images/missionary_08.webp",
+    "images/missionary_01.webp","images/missionary_02.webp","images/missionary_03.webp","images/missionary_04.webp","images/missionary_05.webp","images/missionary_06.webp","images/missionary_07.webp","images/missionary_08.webp",
     "images/piledriver_01.webp",
-    "images/rodeo_01.webp",
-    "images/rodeo_02.webp",
-    "images/saint_01.webp",
-    "images/saint_02.webp",
-    "images/scissors_01.webp",
-    "images/scissors_02.webp",
+    "images/rodeo_01.webp","images/rodeo_02.webp",
+    "images/saint_01.webp","images/saint_02.webp",
+    "images/scissors_01.webp","images/scissors_02.webp",
     "images/sinner_01.webp",
-    "images/spoons_01.webp",
-    "images/spoons_02.webp",
-    "images/spoons_03.webp"
+    "images/spoons_01.webp","images/spoons_02.webp","images/spoons_03.webp"
   ];
 
   const START_IMAGE = "images/ss.webp";
@@ -230,13 +180,11 @@
 
   [...IMAGES, START_IMAGE].forEach(src => new Image().src = src);
 
-  function randomIndex() {
-    return Math.floor(Math.random() * IMAGES.length);
-  }
-
-  function getNewIndex(excluded) {
+  function getNewIndex(excluded = []) {
     let i;
-    do { i = randomIndex(); } while (i === excluded);
+    do {
+      i = Math.floor(Math.random() * IMAGES.length);
+    } while (excluded.includes(i));
     return i;
   }
 
@@ -250,12 +198,18 @@
   }
 
   function refreshImages() {
-    const leftIndex = getNewIndex(previous.left);
+    const excluded = [previous.left, previous.right];
+
+    const leftIndex = getNewIndex(excluded);
     const shouldMatch = Math.random() < 1 / MATCH_ODDS;
 
-    let rightIndex = shouldMatch
-      ? leftIndex
-      : getNewIndex(previous.right === leftIndex ? -1 : previous.right);
+    let rightIndex;
+
+    if (shouldMatch) {
+      rightIndex = leftIndex;
+    } else {
+      rightIndex = getNewIndex([...excluded, leftIndex]);
+    }
 
     previous = { left: leftIndex, right: rightIndex };
 
