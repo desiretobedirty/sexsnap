@@ -44,6 +44,7 @@
       box-shadow: 0 0 25px rgba(255,255,255,0.25);
       user-select: none;
       pointer-events: none;
+      background: #000;
     }
 
     button {
@@ -82,15 +83,19 @@
 </div>
 
 <script>
+
   // =========================
   // SETTINGS
   // =========================
 
-  // Change speed here (milliseconds)
   let speed = 25;
 
-  // Add your images here
+  // =========================
+  // IMAGE LIST
+  // =========================
+
   const images = [
+
 "allimages/69_00.webp",
 "allimages/69_01.webp",
 "allimages/69_02.webp",
@@ -355,6 +360,7 @@
 "allimages/wheelbarrow_02.webp",
 "allimages/wheelbarrow_03.webp",
 "allimages/wheelbarrow_04.webp"
+
   ];
 
   // =========================
@@ -365,12 +371,13 @@
   const button = document.getElementById("toggleButton");
 
   // =========================
-  // PRELOAD / CACHE IMAGES
+  // PRELOAD IMAGES
   // =========================
 
   const cachedImages = [];
 
   function preloadImages() {
+
     images.forEach((src, index) => {
 
       const img = new Image();
@@ -378,37 +385,93 @@
       img.src = src;
 
       img.onload = () => {
-
         console.log("Loaded:", src);
 
-        // Show first image when ready
+        // Show first image once loaded
         if (index === 0) {
           imageElement.src = src;
         }
       };
 
-      cachedImages[index] = img;
+      img.onerror = () => {
+        console.warn("Failed to load:", src);
+      };
+
+      cachedImages.push(img);
 
     });
+
   }
 
   preloadImages();
 
   // =========================
-  // SLIDESHOW
+  // RANDOM NON-REPEATING SYSTEM
   // =========================
 
-  let currentIndex = 0;
   let running = true;
+
+  let shuffledImages = [];
+  let currentIndex = 0;
+  let lastImage = null;
+
+  // Fisher-Yates Shuffle
+  function shuffleArray(array) {
+
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+
+      const j = Math.floor(Math.random() * (i + 1));
+
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
+  }
+
+  // Create new shuffled cycle
+  function createNewShuffle() {
+
+    shuffledImages = shuffleArray(cachedImages);
+
+    // Prevent same image repeating
+    // between cycles
+    if (
+      lastImage &&
+      shuffledImages.length > 1 &&
+      shuffledImages[0].src === lastImage.src
+    ) {
+
+      [shuffledImages[0], shuffledImages[1]] =
+      [shuffledImages[1], shuffledImages[0]];
+    }
+
+    currentIndex = 0;
+  }
+
+  createNewShuffle();
+
+  // =========================
+  // SLIDESHOW LOOP
+  // =========================
 
   setInterval(() => {
 
     if (!running) return;
 
-    currentIndex = (currentIndex + 1) % images.length;
+    // Reshuffle after all images shown
+    if (currentIndex >= shuffledImages.length) {
+
+      lastImage = shuffledImages[shuffledImages.length - 1];
+
+      createNewShuffle();
+    }
 
     // Instant cached image swap
-    imageElement.src = cachedImages[currentIndex].src;
+    imageElement.src = shuffledImages[currentIndex].src;
+
+    currentIndex++;
 
   }, speed);
 
@@ -421,9 +484,12 @@
     running = !running;
 
     if (running) {
+
       button.textContent = "STOP";
       button.classList.remove("stopped");
+
     } else {
+
       button.textContent = "START";
       button.classList.add("stopped");
     }
@@ -437,7 +503,9 @@
   document.addEventListener("keydown", (event) => {
 
     if (event.code === "Space") {
+
       event.preventDefault();
+
       button.click();
     }
 
